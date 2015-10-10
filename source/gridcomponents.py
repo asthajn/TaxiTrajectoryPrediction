@@ -82,3 +82,5 @@ class calcgrid(object)
             f = open('../results/gridParameters.csv' , 'wb')
             f.write("Cell Size : " + str(cellSize) + "\nMaximum x,y [" + str(maxX) + " , "+ str(maxY) + "] \nMinimum x,y [" + str(minX) + " , " + str(minY) +"]\nNumber of Rows : "+ str(numOfRows) +"\nNumber of Columns : "+ str(numOfCols))
             f.close()
+
+            return (cellSize, maxX, maxY , minx, minY, numOfRows, numOfCols)
