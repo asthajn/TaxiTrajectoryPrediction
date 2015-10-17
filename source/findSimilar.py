@@ -1,6 +1,9 @@
 import os
 import csv
 from collections import defaultdict
+import numpy as np
+import createGrid
+import math
 
 class Similarity(object):
 
@@ -22,12 +25,15 @@ class Similarity(object):
 	        length = len(polyline)
 	        ts = timestamp
 
-	        for testPt in polyline:
-	        	key = self.generateCell(testPt,cellSize,numOfCols,minX,minY)
-	        	#print "Cols", numOfCols
-	        	partial = self.distNeighbour(key,numOfCols,grid)
-	        	#print partial
-	        	break
+	        for testPt in range(len(polyline)):
+	        	key = self.generateCell(polyline[testPt],cellSize,numOfCols,minX,minY)
+	        	if testPt < (len(polyline) -1):
+                            vector = [(polyline[testPt+1][0] - polyline[testPt][0]),(polyline[testPt+1][1] - polyline[testPt][1])]
+                        else:
+                            vector = None
+                        ts = (ts+15*testPt)
+	        	partial = self.distNeighbour([vector,ts],key,numOfCols,grid)
+
 	        break	
 
 
@@ -39,31 +45,24 @@ class Similarity(object):
         return key
 
 
-    def distNeighbour(self,key,numOfCols,grid):
-    	#print numOfCols
+    def distNeighbour(self,selfData,key,numOfCols,grid):
     	partial = {}
-
     	partial[key]={}
-    	ctr =0
+    	#ctr =0
     	neighbour_list =[key+1,key-1,key+numOfCols,key-numOfCols, key+numOfCols+1 , key-numOfCols+1 , key+numOfCols-1 , key-numOfCols-1, key]
 
     	for key_grid,value_grid in grid.iteritems():
-    		#print "Checking if key exists \n"
-    		#print "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa    ",key_grid , "     " , key
     		if key_grid in neighbour_list:
-    			#print "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa    ",value_grid,"\n"
-    			print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    ", ctr,key_grid
+    			#print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    ", ctr,key_grid
+    			for traj,value in value_grid.iteritems():
+                            if value[0] == None or selfData[0] == None:
+                                continue
+                            val = np.dot(value[0],selfData[0])/(math.sqrt((value[0][0]*value[0][0])+(value[0][1]*value[0][1])) * math.sqrt((selfData[0][0]*selfData[0][0])+(selfData[0][1]*selfData[0][1])))
+                                  
     			partial[key].update(value_grid)
-	    		#	print "------------------------------------------------------------------------------" , partial[key]
-	    		ctr = ctr+1
-    	#print partial
-    	return partial
-    	#print "list" , neighbour_list[2]
-    	# for neighbour in neighbour_list:
-    	# 	if grid[neighbour] == {}:
-	    # 		partial[key]=grid[neighbour]
-	    		#print "\n",neighbour
+	    		#ctr = ctr+1
 
+    	return partial
 
     #def getTimeNeighbour():
 
