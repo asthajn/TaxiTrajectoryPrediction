@@ -7,7 +7,7 @@ import gridcomponents
 gridComp = gridcomponents.readCSV("../data/training.csv")
 minX,minY = gridComp['minX'], gridComp['minY']
 cellSize = gridComp['cellSize']
-numOfCols = int(gridComp['numOfCols']) * 100
+numOfCols = int(gridComp['numOfCols'])
 numOfRows = int(gridComp['numOfRows'])
 
 #minX,minY = [-9.137097 , 38.715066]
