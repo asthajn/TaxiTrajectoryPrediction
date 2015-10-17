@@ -1,18 +1,12 @@
 import csv
 import math
-
-import gridcomponents
+from lib import FunctionLib
 
 def create_grid(fileLoc,minX,minY,cellSize,numOfCols,numOfRows):
     csvfile = open(fileLoc)
     data = csv.reader(csvfile)
     labels = next(data)
     grid = {}
-    # gridComp = gridcomponents.readCSV(fileLoc)
-    # minX,minY = gridComp['minX'], gridComp['minY']
-    # cellSize = gridComp['cellSize']
-    # numOfCols = gridComp['numOfCols']
-    # numOfRows = gridComp['numOfRows']
 
     #hardcoding to avoid running grid computations
     # minX,minY = [-9.137097 , 38.715066]
@@ -34,18 +28,16 @@ def insertIntoGrid(grid,traj_data,minX,minY,cellSize,numOfCols,numOfRows ):
         ts = timestamp
 
         for i in range(length):
-            row = int((polyline[i][0]-minX)/cellSize)
-            col = int((polyline[i][1]-minY)/cellSize)
-            key = row*numOfCols + col
+            key = FunctionLib().generateCell(polyline[i],cellSize,numOfCols,minX,minY)
             ts = (ts+15*i)
             #print key
             if key not in grid:
                 grid[key] = {}
             
             if i<(length-1):
-                vector = [(polyline[i+1][0] - polyline[i][0]),(polyline[i+1][1] - polyline[i][1])]
-                grid[key][trip_id] = (vector,ts)
-                #grid[key]
+                vector = FunctionLib().getVector(polyline[i],polyline[i+1])
+                next_key = FunctionLib().generateCell(polyline[i+1],cellSize,numOfCols,minX,minY)
+                grid[key][trip_id] = {'vector':vector,'nextKey':next_key,'timestamp':ts}
             else:
-                grid[key][trip_id] = (None,ts)
+                grid[key][trip_id] = {'vector':None,'nextKey':None,'timestamp':ts}
         return grid

@@ -1,9 +1,8 @@
-import os
 import csv
-from collections import defaultdict
+from lib import FunctionLib
 import numpy as np
-import createGrid
 import math
+from constants import JOIN_WEIGHT
 
 class Similarity(object):
 
@@ -26,28 +25,19 @@ class Similarity(object):
 	        ts = timestamp
 
 	        for testPt in range(len(polyline)):
-	        	key = self.generateCell(polyline[testPt],cellSize,numOfCols,minX,minY)
+	        	key = FunctionLib().generateCell(polyline[testPt],cellSize,numOfCols,minX,minY)
 	        	if testPt < (len(polyline) -1):
-                            vector = [(polyline[testPt+1][0] - polyline[testPt][0]),(polyline[testPt+1][1] - polyline[testPt][1])]
+                            vector = FunctionLib().getVector(polyline[testPt],polyline[testPt+1])
+                            nextKey = FunctionLib().generateCell(polyline[testPt+1],cellSize,numOfCols,minX,minY)
                         else:
                             vector = None
+                            nextKey = None
                         ts = (ts+15*testPt)
-	        	partial = self.distNeighbour([vector,ts],key,numOfCols,grid)
+	        	partial = self.distNeighbour({'vector':vector,'nextKey':nextKey,'timestamp':ts},key,numOfCols,grid, partial)
 
 	        break	
 
-
-    def generateCell(self,testPt,cellSize,numOfCols,minX,minY):
-        row = int((testPt[0]-minX)/cellSize)
-        col = int((testPt[1]-minY)/cellSize)
-        key = row*numOfCols + col
-        print "Key is" , key
-        return key
-
-
-    def distNeighbour(self,selfData,key,numOfCols,grid):
-    	partial = {}
-    	partial[key]={}
+    def distNeighbour(self,selfData,key,numOfCols,grid, partial):
     	#ctr =0
     	neighbour_list =[key+1,key-1,key+numOfCols,key-numOfCols, key+numOfCols+1 , key-numOfCols+1 , key+numOfCols-1 , key-numOfCols-1, key]
 
@@ -55,13 +45,20 @@ class Similarity(object):
     		if key_grid in neighbour_list:
     			#print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    ", ctr,key_grid
     			for traj,value in value_grid.iteritems():
-                            if value[0] == None or selfData[0] == None:
-                                continue
-                            val = np.dot(value[0],selfData[0])/(math.sqrt((value[0][0]*value[0][0])+(value[0][1]*value[0][1])) * math.sqrt((selfData[0][0]*selfData[0][0])+(selfData[0][1]*selfData[0][1])))
+                            if traj not in partial:
+                                partial[traj] = {'nextKey':value['nextKey'],'weight':0}
+                            cosineDist = FunctionLib().getCosineDistance(value['vector'],selfData['vector'])
+                            partial[traj]['weight']= partial[traj]['weight'] + JOIN_WEIGHT + cosineDist
                                   
-    			partial[key].update(value_grid)
 	    		#ctr = ctr+1
 
+                for traj in partial:
+                    if traj not in value_grid:
+                        oldNextKey = partial[traj]['nextKey']
+                        if oldNextKey == None:
+                            continue
+                        partial[traj]['nextKey'] = grid[oldNextKey][traj]['nextKey'] 
+ 
     	return partial
 
     #def getTimeNeighbour():

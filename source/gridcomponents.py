@@ -1,6 +1,7 @@
 import numpy
 import csv
 import math
+from constants import GRID_MINX,GRID_MINY,GRID_MAXX,GRID_MAXY
 
 def readCSV(fileLoc):
     with open(fileLoc,"r") as train:
@@ -10,10 +11,10 @@ def readCSV(fileLoc):
         n = 0
         numOfRows = 0
         numOfCols = 0
-        minX = -9.80
-        minY = 36.7
-        maxX = -6.00
-        maxY = 42.30
+        minX = GRID_MINX
+        minY = GRID_MINY
+        maxX = GRID_MAXX
+        maxY = GRID_MAXY
         diffX = 0
         diffY = 0
         cellSize = 0 
