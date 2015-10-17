@@ -57,7 +57,7 @@ def readCSV(fileLoc):
         #with open('gridParameters.csv' , 'wb') as outFile:
             #param = csv.writer(outFile, delimiter=' ', quotechar='|', quoting=csv.QUOTE_MINIMAL)
             #param.writerow(['cellSize'])
-        #f = open('../results/gridParameters.csv' , 'wb')
-        #f.write("Cell Size : " + str(cellSize) + "\nMaximum x,y [" + str(maxX) + " , "+ str(maxY) + "] \nMinimum x,y [" + str(minX) + " , " + str(minY) +"]\nNumber of Rows : "+ str(numOfRows) +"\nNumber of Columns : "+ str(numOfCols)) 
-        #f.close()
+        f = open('../results/gridParameters.csv' , 'wb')
+        f.write("Cell Size : " + str(cellSize) + "\nMaximum x,y [" + str(maxX) + " , "+ str(maxY) + "] \nMinimum x,y [" + str(minX) + " , " + str(minY) +"]\nNumber of Rows : "+ str(numOfRows) +"\nNumber of Columns : "+ str(numOfCols)) 
+        f.close()
         return {'maxX':maxX, 'maxY' : maxY, 'minX' :minX, 'minY':minY, 'cellSize':cellSize, 'numOfRows':numOfRows, 'numOfCols':numOfCols}
