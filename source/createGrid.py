@@ -43,7 +43,8 @@ def insertIntoGrid(grid,traj_data,minX,minY,cellSize,numOfCols,numOfRows ):
                 grid[key] = {}
             
             if i<(length-1):
-                grid[key][trip_id] = (polyline[i+1],ts)
+                vector = [(polyline[i+1][0] - polyline[i][0]),(polyline[i+1][1] - polyline[i][1])]
+                grid[key][trip_id] = (vector,ts)
                 #grid[key]
             else:
                 grid[key][trip_id] = (None,ts)

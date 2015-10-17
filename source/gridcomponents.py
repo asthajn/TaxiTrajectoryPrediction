@@ -10,10 +10,10 @@ def readCSV(fileLoc):
         n = 0
         numOfRows = 0
         numOfCols = 0
-        minX = 0
-        minY = 10000
-        maxX = -100000
-        maxY = 0
+        minX = -9.80
+        minY = 36.7
+        maxX = -6.00
+        maxY = 42.30
         diffX = 0
         diffY = 0
         cellSize = 0 
@@ -36,19 +36,19 @@ def readCSV(fileLoc):
                 diffX = diffX+ math.fabs(nextX - X)
                 diffY = diffY+ math.fabs(nextY - Y)
 
-                if(minX > X):
-                    minX = X
-                if (minY > Y):
-                    minY = Y    
+                #if(minX > X):
+                #    minX = X
+                #if (minY > Y):
+                #    minY = Y    
 
-                if (maxX < X):
-                    maxX = X
-                if (maxY < Y):
-                    maxY = Y  
+                #if (maxX < X):
+                #    maxX = X
+                #if (maxY < Y):
+                #    maxY = Y  
 
         cellSize = (diffX + diffY)/(2*n)    
-        numOfRows = (maxY-minY) / cellSize
-        numOfCols = (maxX-minX) / cellSize
+        numOfRows = math.ceil((maxY-minY) / cellSize)
+        numOfCols = math.ceil((maxX-minX) / cellSize)
         print "Maximum and minimum coordinates : ", maxX ," , ", maxY ," and " , minX ," , ", minY 
         print "the cell size is ", cellSize
         print "Number of rows = ",numOfRows

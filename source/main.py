@@ -4,16 +4,16 @@ from findSimilar import Similarity
 
 import gridcomponents
 
-# gridComp = gridcomponents.readCSV("../data/training.csv")
-# minX,minY = gridComp['minX'], gridComp['minY']
-# cellSize = gridComp['cellSize']
-# numOfCols = int(gridComp['numOfCols']) * 100
-# numOfRows = int(gridComp['numOfRows'])
+gridComp = gridcomponents.readCSV("../data/training.csv")
+minX,minY = gridComp['minX'], gridComp['minY']
+cellSize = gridComp['cellSize']
+numOfCols = int(gridComp['numOfCols']) * 100
+numOfRows = int(gridComp['numOfRows'])
 
-minX,minY = [-9.137097 , 38.715066]
-cellSize = 0.000835417147072
-numOfCols = 167851
-numOfRows = 405962
+#minX,minY = [-9.137097 , 38.715066]
+#cellSize = 0.000835417147072
+#numOfCols = 167851
+#numOfRows = 405962
 
 grid = createGrid.create_grid("../data/training.csv",minX,minY,cellSize,numOfCols,numOfRows)
 count = 0
