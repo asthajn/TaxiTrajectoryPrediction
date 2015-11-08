@@ -34,8 +34,9 @@ class Similarity(object):
                             nextKey = None
                         ts = (ts+15*testPt)
 	        	partial = self.distNeighbour({'vector':vector,'nextKey':nextKey,'timestamp':ts},key,numOfCols,grid, partial)
+	        	print partial
 
-	        break	
+	        break
 
     def distNeighbour(self,selfData,key,numOfCols,grid, partial):
     	#ctr =0
@@ -46,7 +47,7 @@ class Similarity(object):
     			#print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    ", ctr,key_grid
     			for traj,value in value_grid.iteritems():
                             if traj not in partial:
-                                partial[traj] = {'nextKey':value['nextKey'],'weight':0}
+                                partial[traj] = {'nextKey':value['nextKey'],'weight':0, 'currentKey' :key_grid}
                             cosineDist = FunctionLib().getCosineDistance(value['vector'],selfData['vector'])
                             partial[traj]['weight']= partial[traj]['weight'] + JOIN_WEIGHT + cosineDist
                                   
@@ -57,7 +58,8 @@ class Similarity(object):
                         oldNextKey = partial[traj]['nextKey']
                         if oldNextKey == None:
                             continue
-                        partial[traj]['nextKey'] = grid[oldNextKey][traj]['nextKey'] 
+                        partial[traj]['nextKey'] = grid[oldNextKey][traj]['nextKey']
+                        partial[traj]['currentKey'] = oldNextKey
  
     	return partial
 
