@@ -40,7 +40,8 @@ class Similarity(object):
                             if traj not in partial:
                                 partial[traj] = {'nextKey':value['nextKey'],'weight':0, 'currentKey' :key_grid}
                             cosineDist = FunctionLib().getCosineDistance(value['vector'],selfData['vector'])
-                            partial[traj]['weight']= partial[traj]['weight'] + JOIN_WEIGHT + cosineDist
+                            timeWeight = self.getTimeNeighbour(value['timestamp'], selfData['timestamp'])
+                            partial[traj]['weight']= partial[traj]['weight'] + JOIN_WEIGHT + cosineDist + timeWeight
 
                 for traj in partial:
                     if traj not in value_grid:
@@ -51,6 +52,25 @@ class Similarity(object):
                         partial[traj]['currentKey'] = oldNextKey
  
     	return partial
+
+    def getTimeNeighbour(self, neighbour_ts , self_ts):
+    	if (self.bucket(neighbour_ts) == self.bucket(self_ts)):
+    		return 1
+    	else:
+    		return 0
+
+    def bucket(self, ts):
+    	sec = ts%86400
+    	if (sec in range(25200) or sec in range(43200,61200)):
+    		return 3
+    	elif (sec in range(25200,36000) or sec in range(61200, 75600) or sec in range(43200,50400)):
+    		return 1
+    	else:
+    		return 2
+
+    
+
+
 
 
 
