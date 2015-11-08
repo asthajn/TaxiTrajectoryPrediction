@@ -1,39 +1,41 @@
 import csv
 import createGrid
 from findSimilar import Similarity
-
+import pickle
 import gridcomponents
+import time
 
-gridComp = gridcomponents.readCSV("../data/training.csv")
-minX,minY = gridComp['minX'], gridComp['minY']
-cellSize = gridComp['cellSize']
-numOfCols = int(gridComp['numOfCols'])
-numOfRows = int(gridComp['numOfRows'])
+try:
+    f = open('../preprocessed_data/grid_components.txt', 'rb')
+except IOError:
+    gridComp = gridcomponents.readCSV("../data/training.csv")
+    f = open('../preprocessed_data/grid_components.txt', 'wb')
+    pickle.dump(gridComp,f)
+    f.close()
+else:
+    gridComp = pickle.load(f)
+    f.close()
+finally:  
+    minX,minY = gridComp['minX'], gridComp['minY']
+    cellSize = gridComp['cellSize']
+    numOfCols = int(gridComp['numOfCols'])
+    numOfRows = int(gridComp['numOfRows'])
 
-#minX,minY = [-9.137097 , 38.715066]
-#cellSize = 0.000835417147072
-#numOfCols = 167851
-#numOfRows = 405962
-
-grid = createGrid.create_grid("../data/training.csv",minX,minY,cellSize,numOfCols,numOfRows)
-count = 0
-
-# for key,value in grid.iteritems():
-#     count = count+1
-#     print "\nAstha\n\n",key ,"\nvalues\n", value
-#     for innerkey,innervalue in value.iteritems():
-#         if innervalue[0] == None:
-#             continue
-#         else:
-#             print "inner" , innerkey , "\nvalue\n" , innervalue[1]
-#     if count == 10:
-#         break
-
-
+try:
+    f = open('../preprocessed_data/grid.txt', 'rb')
+except IOError:
+    print "start"
+    a = time.time()
+    grid = createGrid.create_grid("../data/training.csv",minX,minY,cellSize,numOfCols,numOfRows)
+    f = open('../preprocessed_data/grid.txt', 'wb')
+    pickle.dump(grid,f)
+    print "end"
+    print (time.time() - a)
+    f.close()
+else:
+    grid = pickle.load(f)
+    f.close()
 
 similar = Similarity()
-# minX,minY = [-9.137097 , 38.715066]
-# cellSize = 0.0835417147072
-# numOfCols = 167851
-# numOfRows = 405962
+
 similar.readtest("../data/test.csv",cellSize,numOfCols,minX,minY,grid)
