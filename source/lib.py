@@ -17,6 +17,9 @@ class FunctionLib(object):
         if vector1 == None or vector2 == None:
             return 0
         else:
+            magnitude = self.vectorMagnitude(vector1)*self.vectorMagnitude(vector2)
+            if magnitude == 0:
+                return 0
             return np.dot(vector1,vector2)/(self.vectorMagnitude(vector1)*self.vectorMagnitude(vector2))
 
     def getVector(self,point1,point2):

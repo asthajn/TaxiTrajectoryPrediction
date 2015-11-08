@@ -3,7 +3,6 @@ import createGrid
 from findSimilar import Similarity
 import pickle
 import gridcomponents
-import time
 
 try:
     f = open('../preprocessed_data/grid_components.txt', 'rb')
@@ -24,13 +23,9 @@ finally:
 try:
     f = open('../preprocessed_data/grid.txt', 'rb')
 except IOError:
-    print "start"
-    a = time.time()
     grid = createGrid.create_grid("../data/training.csv",minX,minY,cellSize,numOfCols,numOfRows)
     f = open('../preprocessed_data/grid.txt', 'wb')
     pickle.dump(grid,f)
-    print "end"
-    print (time.time() - a)
     f.close()
 else:
     grid = pickle.load(f)

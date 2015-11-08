@@ -3,6 +3,7 @@ from lib import FunctionLib
 import numpy as np
 import math
 from constants import JOIN_WEIGHT
+import time
 
 class Similarity(object):
 
@@ -11,7 +12,7 @@ class Similarity(object):
         data = csv.reader(csvfile)
         labels = next(data)
         partial = {}
-
+        start = time.time()
         for traj_data in data:
 	        trip_id = traj_data[0]
 	        timestamp = int(traj_data[5])
@@ -33,7 +34,8 @@ class Similarity(object):
 
     def distNeighbour(self,selfData,key,numOfCols,grid, partial):
     	neighbour_list =[key+1,key-1,key+numOfCols,key-numOfCols, key+numOfCols+1 , key-numOfCols+1 , key+numOfCols-1 , key-numOfCols-1, key]
-
+    	curr_matched_traj = {}
+    	
     	for key_grid,value_grid in grid.iteritems():
     		if key_grid in neighbour_list:
     			for traj,value in value_grid.iteritems():
@@ -42,14 +44,15 @@ class Similarity(object):
                             cosineDist = FunctionLib().getCosineDistance(value['vector'],selfData['vector'])
                             timeWeight = self.getTimeNeighbour(value['timestamp'], selfData['timestamp'])
                             partial[traj]['weight']= partial[traj]['weight'] + JOIN_WEIGHT + cosineDist + timeWeight
+                            curr_matched_traj[traj] = traj
 
-                for traj in partial:
-                    if traj not in value_grid:
-                        oldNextKey = partial[traj]['nextKey']
-                        if oldNextKey == None:
-                            continue
-                        partial[traj]['nextKey'] = grid[oldNextKey][traj]['nextKey']
-                        partial[traj]['currentKey'] = oldNextKey
+        for traj in partial:
+            if traj not in curr_matched_traj:
+                oldNextKey = partial[traj]['nextKey']
+                if oldNextKey == None:
+                    continue
+                partial[traj]['nextKey'] = grid[oldNextKey][traj]['nextKey']
+                partial[traj]['currentKey'] = oldNextKey
  
     	return partial
 
