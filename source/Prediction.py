@@ -11,15 +11,15 @@ class Prediction(object):
 		prob = {} # dictionary with probability of different clusters and cluster weighted mean
 		for key,value in cluster.iteritems():
 			prob[key] = {}
-			prob[key]['weight'] = weightsAndCentroid[key]['weight']/t_wt
-			prob[key]['cluster'] = weightsAndCentroid[key]['centroid']
+			prob[key]['prob'] = weightsAndCentroid[key]['weight']/t_wt
+			prob[key]['position'] = weightsAndCentroid[key]['centroid']
 			#prob[key]['cluster'] = value['centroid']
 
 		#print "\n \nProb for prediction :",prob
 
 		partial = self.updateWeightAndNextKey(partial,cluster, weightsAndCentroid,t_wt,grid)
 
-		return prob,partial
+		return prob,partial,t_wt
 
 	# def totalWeight(self, partial):
 	# 	t_wt = 0 # total of weights
@@ -33,7 +33,7 @@ class Prediction(object):
 		for key, value in cluster.iteritems(): # key is the cluster number
 			c_wt = 0
 			combined_wt =0
-			sum_cell = 0
+			#sum_cell = 0
 			for point in value['points']:
 				for traj, traj_data in partial.iteritems():
 					if traj_data['nextKey'] == point:
@@ -45,7 +45,7 @@ class Prediction(object):
 			weightsAndCentroid[key]['weight'] = c_wt
 			weightsAndCentroid[key]['centroid'] = math.ceil(combined_wt/c_wt)
 
-			print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \n",weightsAndCentroid[key]['centroid'] , weightsAndCentroid[key]['weight']
+			#print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ \n",weightsAndCentroid[key]['centroid'] , weightsAndCentroid[key]['weight']
 			t_wt = t_wt+c_wt
 		return t_wt,weightsAndCentroid
 

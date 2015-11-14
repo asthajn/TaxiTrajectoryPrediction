@@ -10,7 +10,7 @@ class HClustering(object):
 	# threshold = 2
 	# decision = 0
 	
-	def makeClusters(self,IncomingDict,grid,decision,threshold):
+	def makeClusters(self,IncomingDict,grid,decision,threshold,old_wt):
         #print "----------------------------------------------------------------------------------------------------------------"
         #print "Incoming Dict : " ,IncomingDict
 
@@ -34,14 +34,12 @@ class HClustering(object):
 		#print "None Cells : ",noneCells
 		print "Number of Points to be clustered : ",cnt
 
-
-
 		if nxtCells != []:
 			#cl = HierarchicalClustering(nxtCells, lambda x,y: abs(x-y),None,3) #abs(x-y) gives the Manhattan distance between x and y
 			cl = KMeansClustering(nxtCells,None)
 			#finalClusters = cl.getlevel(10) #Threshold value given to prune clusters
 			finalClusters = cl.getclusters(20)
-			print "Final Cluters : ",finalClusters
+			#print "Final Cluters : ",finalClusters
 
 		# To form dict for Prediction Input
 		clusterID = 1
@@ -54,7 +52,7 @@ class HClustering(object):
 			for eachTuple in cluster:
 				cellKey = FunctionLib().reverseCell(eachTuple)
 				currentCluster.append(cellKey)
-			print currentCluster
+			#print currentCluster
 			predictionInput[clusterID] = {}
 			predictionInput[clusterID]['centroid'] = math.ceil(np.mean(currentCluster))
 			predictionInput[clusterID]['points'] = currentCluster
@@ -64,12 +62,14 @@ class HClustering(object):
 		
 		#print predictionInput
 		predictObject = Prediction()
-		prob,IncomingDict = predictObject.predict(IncomingDict,predictionInput,grid)
+		prob,IncomingDict,t_wt = predictObject.predict(IncomingDict,predictionInput,grid)
+		print "Total weight is :",t_wt
 		print "\nDecision taken: ",decision , " as ",prob
 
-		if(decision == threshold):
-			return
+		if(decision == threshold or (old_wt/t_wt)>2):
+			return prob,decision
 		else:
 			print "\nInside else for prediction\n"
-			self.makeClusters(IncomingDict,grid,decision,threshold)
+			prob,decision = self.makeClusters(IncomingDict,grid,decision,threshold,t_wt)
 
+		return prob,decision
