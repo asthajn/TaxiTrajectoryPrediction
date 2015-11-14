@@ -12,6 +12,7 @@ except IOError:
     pickle.dump(gridComp,f)
     f.close()
 else:
+    print "components found"
     gridComp = pickle.load(f)
     f.close()
 finally:  
@@ -23,8 +24,10 @@ finally:
 try:
     f = open('../preprocessed_data/grid.txt', 'rb')
 except IOError:
+    print "Creating grid\n"
     grid = createGrid.create_grid("../data/training.csv",minX,minY,cellSize,numOfCols,numOfRows)
     f = open('../preprocessed_data/grid.txt', 'wb')
+    print "Grid created , Not dumping\n"
     pickle.dump(grid,f)
     f.close()
 else:
@@ -32,5 +35,7 @@ else:
     f.close()
 
 similar = Similarity()
+
+print "Cell Size :",cellSize,"\n","Num of cols :",numOfCols,"\nNumber of Rows :",numOfRows
 
 similar.readtest("../data/test.csv",cellSize,numOfCols,minX,minY,grid)

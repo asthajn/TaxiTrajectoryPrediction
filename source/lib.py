@@ -10,6 +10,10 @@ class FunctionLib(object):
         #print "Key is" , key
         return key
 
+    def reverseCell(self,tuple):
+        key = tuple[1]*4456+tuple[0]
+        return key
+
     def vectorMagnitude(self,vector):
         return math.sqrt((vector[0]*vector[0])+(vector[1]*vector[1]))
 
