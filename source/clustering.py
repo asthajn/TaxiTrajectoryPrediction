@@ -31,7 +31,6 @@ class HClustering(object):
         print "\nNext Cells : ",nxtCells
         print "\nNumber of Points to be clustered : ",cnt
         print "\nStart Clustering : ",datetime.datetime.now()
-        print "Number of Points to be clustered : ",cnt
 
         if nxtCells != []:
             distances = scipy.spatial.distance.cdist(nxtCells, nxtCells, 'cityblock') #Create a matrix of distance between points
@@ -55,8 +54,15 @@ class HClustering(object):
             if clusterKey > max :
                 max = clusterKey
             clusterID=clusterID+1
-            print "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-            decision = decision+1
+
+        #print "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+        decision = decision+1
+        print "\nMaximum Key : ",max
+        print "\nDuplicates : ",dup
+        print "\nTotal Points clustered : ",max+dup
+        print "\nTally Correct : ",max+dup==clusterID
+        print "\nCluster Output :",predictionInput
+        print "\nEnd Clustering : ",datetime.datetime.now()
 
         #print predictionInput
         predictObject = Prediction()
